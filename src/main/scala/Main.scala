@@ -33,9 +33,9 @@ object Main extends App {
   val source: Source[Goods, NotUsed] = Source.fromPublisher(Goods.streamAll())
 
   //それぞれの商品をCSVの要素を要素に持つIterableに変換
-  def fractionize(g: Goods): immutable.Iterable[String] = immutable.Seq(g.id.toString, g.name, g.price.toString)
+  def convertToCSVLine(g: Goods): immutable.Iterable[String] = immutable.Seq(g.id.toString, g.name, g.price.toString)
 
-  val flow = Flow[Goods].map(fractionize).via(CsvFormatting.format(charset = Charset.forName("Shift-JIS")))
+  val flow = Flow[Goods].map(convertToCSVLine).via(CsvFormatting.format(charset = Charset.forName("Shift-JIS")))
 
   val sink =  FileIO.toPath(csvOutputPath)
 
